@@ -12,12 +12,7 @@ resource "aws_instance" "bastion" {
     aws_security_group.bastion-sg.id
   ]
 
-    metadata_options {
-      http_tokens = "required"
-     }  
-
   root_block_device {
-    encrypted = true
     delete_on_termination = true
     iops                  = 150
     volume_size           = 50
@@ -27,15 +22,12 @@ resource "aws_instance" "bastion" {
   tags = {
     Name    = "bastion"
     OS      = "Ubuntu"
-    CostCentre = "Engineering"
     Managed = "Terraform - Infrastructure"
   }
 
   depends_on = [aws_security_group.bastion-sg]
 }
 
-
-#tfsec:ignore:aws-vpc-add-description-to-security-group
 resource "aws_security_group" "bastion-sg" {
   name   = "bastion-sg"
   vpc_id = aws_vpc.acme-vpc.id
@@ -54,7 +46,7 @@ resource "aws_security_group_rule" "bastion-sg-ssh-ingress-rule" {
   from_port   = 22
   to_port     = 22
   protocol    = "tcp"
-  cidr_blocks = var.ssh_access_ip
+  cidr_blocks = [ "0.0.0.0/0" ]
 
   security_group_id = aws_security_group.bastion-sg.id
 
