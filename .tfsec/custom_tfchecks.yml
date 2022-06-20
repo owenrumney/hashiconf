@@ -1,0 +1,18 @@
+---
+checks:
+  - code: instance-tags-costcentre
+    description: All AWS instances require an CostCentre tag
+    impact: By not having CostCentre we can not accurately keep track of billing
+    resolution: Add the CostCentre tag with the correct cost code
+    requiredTypes:
+      - resource
+    requiredLabels:
+      - aws_instance
+    severity: LOW
+    matchSpec:
+      name: tags
+      action: contains
+      value: CostCentre
+    errorMessage: The required CostCentre tag was missing
+    relatedLinks:
+      - http://internal.acmecorp.com/standards/aws/tagging.html
